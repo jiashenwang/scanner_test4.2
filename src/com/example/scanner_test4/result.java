@@ -27,6 +27,7 @@ public class result extends Activity {
 	    Bundle extras = getIntent().getExtras();
 	    String path = extras.getString("PATH");
 	    
+	    
 	    try {
 	        File f=new File(path, "profile.jpg");
 	        Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));

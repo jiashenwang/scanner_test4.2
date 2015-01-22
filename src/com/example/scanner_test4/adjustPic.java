@@ -74,10 +74,10 @@ public class adjustPic extends Activity implements OnTouchListener{
 	ImageView imageView, imageViewResult;
 	ImageView blackLayer;// whiteLayer;
 	ProgressBar pb;
-	private Point leftTop = new Point(0,0);
-	private Point leftBot = new Point(0,600);
-	private Point rightTop = new Point(1000,0);
-	private Point rightBot = new Point(1000,600);
+	private Point leftTop = new Point(20,20);
+	private Point leftBot = new Point(20,580);
+	private Point rightTop = new Point(980,20);
+	private Point rightBot = new Point(980,580);
 	private Point new_leftTop = new Point(0,0);
 	private Point new_leftBot = new Point(0,0);
 	private Point new_rightTop = new Point(0,0);
@@ -183,10 +183,12 @@ public class adjustPic extends Activity implements OnTouchListener{
 	        Bitmap resultBitmap = BitmapFactory.decodeFile(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
 	        		+"/scanner_test4_pic.jpg");	
 	        
-	        double realWidth = resultBitmap.getWidth();
-	        double realHeight = resultBitmap.getHeight();
+	        double realWidth = resultBitmap.getWidth()/2;
+	        double realHeight = resultBitmap.getHeight()/2;
 	        double widthRatio = realWidth/dst_width;
 	        double heightRatio = realHeight/dst_height;
+	        
+	        resultBitmap = getResizedBitmap(resultBitmap,(int)realHeight,(int)realWidth);
 	        
 			new_leftTop = new Point(((LT.getX()+LT.getLayoutParams().width/2f)/(imageView.getWidth())*dst_width)*widthRatio,
 					((LT.getY()+LT.getLayoutParams().height/2f)/(imageView.getHeight())*dst_height)*heightRatio);
@@ -196,14 +198,10 @@ public class adjustPic extends Activity implements OnTouchListener{
 					((RT.getY()+RT.getLayoutParams().height/2f)/(imageView.getHeight())*dst_height)*heightRatio);
 			new_rightBot = new Point(((RB.getX()+RB.getLayoutParams().width/2f)/(imageView.getWidth())*dst_width)*widthRatio,
 					((RB.getY()+RB.getLayoutParams().height/2f)/(imageView.getHeight())*dst_height)*heightRatio);
+
 			
-			Log.wtf("!!!!!!!!", new_leftTop.toString());
-			Log.wtf("!!!!!!!!", new_rightTop.toString());
-			Log.wtf("!!!!!!!!", new_leftBot.toString());
-			Log.wtf("!!!!!!!!", new_rightBot.toString());
-			
-			double resultWidth = distance(new_leftTop,new_rightTop);
-			double resultHeight = resultWidth * 0.6;
+			double resultWidth = 1000;
+			double resultHeight = 630.60748;
 			
 	        Mat src_mat=new Mat(4,1,CvType.CV_32FC2);
 	        Mat dst_mat=new Mat(4,1,CvType.CV_32FC2);
@@ -262,13 +260,7 @@ public class adjustPic extends Activity implements OnTouchListener{
 	        Intent intent = new Intent(adjustPic.this, result.class);
 	        intent.putExtra("PATH", directory.getAbsolutePath());
 	        startActivity(intent);
-			
-	        // flip is not done
-			//rotateLeft.setVisibility(View.VISIBLE);
-			//rotateRight.setVisibility(View.VISIBLE);
-	        
-//			imageViewResult.setImageBitmap(resultBitmap);
-//			imageViewResult.setVisibility(View.VISIBLE);
+
 		}
 		
 	}
@@ -431,9 +423,9 @@ public class adjustPic extends Activity implements OnTouchListener{
 	
 	// find zoom in picture
 	private Bitmap findZoomInPic(double x, double y, Bitmap processBitmap2) {
-		double x_t = x/2;
-		double y_t = y/2;
-		Bitmap originBm = getResizedBitmap(processBitmap2, 300, 500);
+		double x_t = x/1.5;
+		double y_t = y/1.5;
+		Bitmap originBm = getResizedBitmap(processBitmap2, 400, 667);
 		
 		Mat origin = new Mat();
 		origin = Utils.bitmapToMat(originBm);
@@ -441,19 +433,19 @@ public class adjustPic extends Activity implements OnTouchListener{
         Mat src_mat=new Mat(4,1,CvType.CV_32FC2);
         Mat dst_mat=new Mat(4,1,CvType.CV_32FC2);
         
-        src_mat.put(0,0, x_t-10,y_t-10, x_t+10,y_t-10, x_t-10,y_t+10, x_t+10,y_t+10); 
-        dst_mat.put(0,0, 0,0,500,0, 0,300, 500,300);
+        src_mat.put(0,0, x_t-20,y_t-20, x_t+20,y_t-20, x_t-20,y_t+20, x_t+20,y_t+20); 
+        dst_mat.put(0,0, 0,0,667,0, 0,400, 667,400);
         
         Mat tempMat = Imgproc.getPerspectiveTransform(src_mat, dst_mat);
         
         Mat dstMat=origin.clone();
-        Imgproc.warpPerspective(origin, dstMat, tempMat, new Size(500,300));
+        Imgproc.warpPerspective(origin, dstMat, tempMat, new Size(667,400));
         
-        double middle_x = 500/2;
-        double middle_y = 300/2;
+        double middle_x = 667/2;
+        double middle_y = 400/2;
         
-        Core.line(dstMat, new Point(middle_x,middle_y+60), new Point(middle_x,middle_y-60), new Scalar(255,255,255), 3);
-        Core.line(dstMat, new Point(middle_x+60,middle_y), new Point(middle_x-60,middle_y), new Scalar(255,255,255), 3);
+        Core.line(dstMat, new Point(middle_x,middle_y+120), new Point(middle_x,middle_y-120), new Scalar(255,255,255), 5);
+        Core.line(dstMat, new Point(middle_x+120,middle_y), new Point(middle_x-120,middle_y), new Scalar(255,255,255), 5);
         Utils.matToBitmap(dstMat, originBm);
         
 		return originBm;
