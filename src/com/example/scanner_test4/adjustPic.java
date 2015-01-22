@@ -756,7 +756,7 @@ public class adjustPic extends Activity implements OnTouchListener{
 	    DisplayMetrics metrics = resources.getDisplayMetrics();
 	    float dp = px / (metrics.densityDpi / 160f);
 	    return dp;
-	}
+	} 
 	double distance(Point pt1, Point pt2){
 		return (Math.sqrt((pt1.x-pt2.x)*(pt1.x-pt2.x)+(pt1.y-pt2.y)*(pt1.y-pt2.y)));
 	}
