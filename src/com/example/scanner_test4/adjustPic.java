@@ -67,6 +67,8 @@ public class adjustPic extends Activity implements OnTouchListener{
 	
 	int dst_width = 1000;
 	int dst_height = 600;
+	int initial_left=20, initial_right=980, initial_top=20, initial_bot=580;
+	
 	 
 	ImageView confirm, rotateLeft, rotateRight;
 	ImageView zoom;
@@ -74,15 +76,19 @@ public class adjustPic extends Activity implements OnTouchListener{
 	ImageView imageView, imageViewResult;
 	ImageView blackLayer;// whiteLayer;
 	ProgressBar pb;
-	private Point leftTop = new Point(20,20);
-	private Point leftBot = new Point(20,580);
-	private Point rightTop = new Point(980,20);
-	private Point rightBot = new Point(980,580);
+	
+	private Point leftTop = new Point(initial_left,initial_right);
+	private Point leftBot = new Point(initial_left,initial_bot);
+	private Point rightTop = new Point(initial_right,initial_right);
+	private Point rightBot = new Point(initial_right,initial_bot);
 	private Point new_leftTop = new Point(0,0);
 	private Point new_leftBot = new Point(0,0);
 	private Point new_rightTop = new Point(0,0);
 	private Point new_rightBot = new Point(0,0);
 	Bitmap processBitmap, resultBitmap;
+	
+	// check if it finds four points successfully or not !!!!!!!!!!!!
+	boolean squareFinded = false;
 	
 	double rHeight, rWidth;
 	
@@ -595,7 +601,9 @@ public class adjustPic extends Activity implements OnTouchListener{
 	         
 	        if(largest_square.size()==0){
 	        	//Utils.matToBitmap(rgbMat, processBitmap);
+	        	squareFinded = false;
 	        }else{
+	        	squareFinded = true;
 	        	double maxSum=Double.NEGATIVE_INFINITY, 
 	        			minSum = Double.POSITIVE_INFINITY,
 	        			maxDiff = Double.NEGATIVE_INFINITY, 
@@ -714,7 +722,7 @@ public class adjustPic extends Activity implements OnTouchListener{
 						double cosine = Math.abs(angle(tempList2.get(j%4), tempList2.get(j-2), tempList2.get(j-1)));
 						maxCosine = Math.max(maxCosine, cosine);
 					}
-					if (maxCosine < 0.4){
+					if (maxCosine < 0.31){
                         squares.add(tempList2);
 					}
 				}
