@@ -51,6 +51,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 public class adjustPic extends Activity implements OnTouchListener{
 	
@@ -77,9 +78,9 @@ public class adjustPic extends Activity implements OnTouchListener{
 	ImageView blackLayer;// whiteLayer;
 	ProgressBar pb;
 	
-	private Point leftTop = new Point(initial_left,initial_right);
+	private Point leftTop = new Point(initial_left,initial_top);
 	private Point leftBot = new Point(initial_left,initial_bot);
-	private Point rightTop = new Point(initial_right,initial_right);
+	private Point rightTop = new Point(initial_right,initial_top);
 	private Point rightBot = new Point(initial_right,initial_bot);
 	private Point new_leftTop = new Point(0,0);
 	private Point new_leftBot = new Point(0,0);
@@ -160,6 +161,7 @@ public class adjustPic extends Activity implements OnTouchListener{
 	    
 	    MyAsyncTaskHelper async = new MyAsyncTaskHelper(getApplicationContext());
 	    async.execute();
+	    
 	    
 	    confirm.setOnClickListener(new ConfirmListerner());
 	    rotateLeft.setOnClickListener(new RotateLeftListerner());
@@ -429,9 +431,9 @@ public class adjustPic extends Activity implements OnTouchListener{
 	
 	// find zoom in picture
 	private Bitmap findZoomInPic(double x, double y, Bitmap processBitmap2) {
-		double x_t = x/1.5;
-		double y_t = y/1.5;
-		Bitmap originBm = getResizedBitmap(processBitmap2, 400, 667);
+		double x_t = x/2;
+		double y_t = y/2;
+		Bitmap originBm = getResizedBitmap(processBitmap2, 300, 500);
 		
 		Mat origin = new Mat();
 		origin = Utils.bitmapToMat(originBm);
@@ -440,15 +442,15 @@ public class adjustPic extends Activity implements OnTouchListener{
         Mat dst_mat=new Mat(4,1,CvType.CV_32FC2);
         
         src_mat.put(0,0, x_t-20,y_t-20, x_t+20,y_t-20, x_t-20,y_t+20, x_t+20,y_t+20); 
-        dst_mat.put(0,0, 0,0,667,0, 0,400, 667,400);
+        dst_mat.put(0,0, 0,0,500,0, 0,300, 500,300);
         
         Mat tempMat = Imgproc.getPerspectiveTransform(src_mat, dst_mat);
         
         Mat dstMat=origin.clone();
-        Imgproc.warpPerspective(origin, dstMat, tempMat, new Size(667,400));
+        Imgproc.warpPerspective(origin, dstMat, tempMat, new Size(500,300));
         
-        double middle_x = 667/2;
-        double middle_y = 400/2;
+        double middle_x = 500/2;
+        double middle_y = 300/2;
         
         Core.line(dstMat, new Point(middle_x,middle_y+120), new Point(middle_x,middle_y-120), new Scalar(255,255,255), 5);
         Core.line(dstMat, new Point(middle_x+120,middle_y), new Point(middle_x-120,middle_y), new Scalar(255,255,255), 5);
@@ -477,6 +479,11 @@ public class adjustPic extends Activity implements OnTouchListener{
 		
 		@Override
 		protected void onPostExecute(Void v){
+			
+	        if(squareFinded==false){
+	        	Toast.makeText(getBaseContext(), "Edge Detection Failed! ", Toast.LENGTH_SHORT).show();
+	        }
+	        
 	        pb.setVisibility(View.GONE);
 	        confirm.setVisibility(View.VISIBLE);
 	        imageView.setVisibility(View.VISIBLE);
@@ -638,6 +645,7 @@ public class adjustPic extends Activity implements OnTouchListener{
 	        	Core.line(rgbMat, leftTop, leftBot, new Scalar(255,0,0), 1);
 	        	*/
 	            //Utils.matToBitmap(rgbMat, processBitmap);
+	        	
 	            
 	        }
 	        
@@ -722,7 +730,7 @@ public class adjustPic extends Activity implements OnTouchListener{
 						double cosine = Math.abs(angle(tempList2.get(j%4), tempList2.get(j-2), tempList2.get(j-1)));
 						maxCosine = Math.max(maxCosine, cosine);
 					}
-					if (maxCosine < 0.31){
+					if (maxCosine < 0.33){
                         squares.add(tempList2);
 					}
 				}
