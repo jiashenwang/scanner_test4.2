@@ -722,7 +722,7 @@ public class adjustPic extends Activity implements OnTouchListener{
 						true);
 				Converters.Mat_to_vector_Point(tempMat, tempList2);
 				if(tempList2.size()==4 && 
-						Math.abs(Imgproc.contourArea(tempMat)) > 1000 &&
+						Math.abs(Imgproc.contourArea(tempMat)) > 40000 &&
 						Imgproc.isContourConvex(tempList2)){
 					double maxCosine = 0;
 					
