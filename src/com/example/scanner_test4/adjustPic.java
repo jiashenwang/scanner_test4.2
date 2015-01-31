@@ -355,7 +355,7 @@ public class adjustPic extends Activity implements OnTouchListener{
 				Canvas canvas = new Canvas(temp);
 			    Paint paint = new Paint();
 			    paint.setColor(Color.rgb(102, 204, 255));
-			    paint.setStrokeWidth(2);
+			    paint.setStrokeWidth(4);
 			    canvas.drawLine((LT.getX()+LT.getLayoutParams().width/2f)/imageView.getWidth()*dst_width, 
 			    		(LT.getY()+LT.getLayoutParams().height/2f)/imageView.getLayoutParams().height*dst_height, 
 			    		(RT.getX()+RT.getLayoutParams().width/2f)/imageView.getWidth()*dst_width, 
@@ -431,9 +431,11 @@ public class adjustPic extends Activity implements OnTouchListener{
 	
 	// find zoom in picture
 	private Bitmap findZoomInPic(double x, double y, Bitmap processBitmap2) {
-		double x_t = x/2;
-		double y_t = y/2;
-		Bitmap originBm = getResizedBitmap(processBitmap2, 300, 500);
+		double x_t = x/4;
+		double y_t = y/4;
+		int shrinkWidth = 250;
+		int shrinkHeight = (int) (shrinkWidth * 0.6);
+		Bitmap originBm = getResizedBitmap(processBitmap2, shrinkHeight, shrinkWidth);
 		
 		Mat origin = new Mat();
 		origin = Utils.bitmapToMat(originBm);
@@ -441,19 +443,19 @@ public class adjustPic extends Activity implements OnTouchListener{
         Mat src_mat=new Mat(4,1,CvType.CV_32FC2);
         Mat dst_mat=new Mat(4,1,CvType.CV_32FC2);
         
-        src_mat.put(0,0, x_t-20,y_t-20, x_t+20,y_t-20, x_t-20,y_t+20, x_t+20,y_t+20); 
-        dst_mat.put(0,0, 0,0,500,0, 0,300, 500,300);
+        src_mat.put(0,0, x_t-15,y_t-15, x_t+15,y_t-15, x_t-15,y_t+15, x_t+15,y_t+15); 
+        dst_mat.put(0,0, 0,0,shrinkWidth,0, 0,shrinkHeight, shrinkWidth,shrinkHeight);
         
         Mat tempMat = Imgproc.getPerspectiveTransform(src_mat, dst_mat);
         
         Mat dstMat=origin.clone();
-        Imgproc.warpPerspective(origin, dstMat, tempMat, new Size(500,300));
+        Imgproc.warpPerspective(origin, dstMat, tempMat, new Size(shrinkWidth,shrinkHeight));
         
-        double middle_x = 500/2;
-        double middle_y = 300/2;
+        double middle_x = shrinkWidth/2;
+        double middle_y = shrinkHeight/2;
         
-        Core.line(dstMat, new Point(middle_x,middle_y+120), new Point(middle_x,middle_y-120), new Scalar(255,255,255), 5);
-        Core.line(dstMat, new Point(middle_x+120,middle_y), new Point(middle_x-120,middle_y), new Scalar(255,255,255), 5);
+        Core.line(dstMat, new Point(middle_x,middle_y+30), new Point(middle_x,middle_y-30), new Scalar(255,255,255), 1);
+        Core.line(dstMat, new Point(middle_x+30,middle_y), new Point(middle_x-30,middle_y), new Scalar(255,255,255), 1);
         Utils.matToBitmap(dstMat, originBm);
         
 		return originBm;
@@ -521,7 +523,7 @@ public class adjustPic extends Activity implements OnTouchListener{
 			Canvas canvas = new Canvas(temp);
 		    Paint paint = new Paint();
 		    paint.setColor(Color.rgb(102, 204, 255));
-		    paint.setStrokeWidth(2);
+		    paint.setStrokeWidth(4);
 		    
 		    
 		    canvas.drawLine((LT.getX()+LT.getLayoutParams().width/2f)/imageView.getWidth()*dst_width, 
@@ -619,23 +621,23 @@ public class adjustPic extends Activity implements OnTouchListener{
 	        	for(int i=0; i<largest_square.get(0).size();i++){
 	              	if(largest_square.get(0).get(i).x+largest_square.get(0).get(i).y <= minSum){
 	              		minSum = largest_square.get(0).get(i).x+largest_square.get(0).get(i).y;
-	              		leftTop.x = largest_square.get(0).get(i).x+5;
-	              		leftTop.y = largest_square.get(0).get(i).y+5;
+	              		leftTop.x = largest_square.get(0).get(i).x;//+5;
+	              		leftTop.y = largest_square.get(0).get(i).y;//+5;
 	              	}
 	              	if(largest_square.get(0).get(i).x+largest_square.get(0).get(i).y >= maxSum){
 	              		maxSum = largest_square.get(0).get(i).x+largest_square.get(0).get(i).y;
-	              		rightBot.x = largest_square.get(0).get(i).x-5;
-	              		rightBot.y = largest_square.get(0).get(i).y+5;
+	              		rightBot.x = largest_square.get(0).get(i).x;//+5;
+	              		rightBot.y = largest_square.get(0).get(i).y;//+5;
 	              	}
 	              	if(largest_square.get(0).get(i).x-largest_square.get(0).get(i).y <= minDiff){
 	              		minDiff = largest_square.get(0).get(i).x-largest_square.get(0).get(i).y;
-	              		leftBot.x = largest_square.get(0).get(i).x+5;
-	              		leftBot.y = largest_square.get(0).get(i).y-5;
+	              		leftBot.x = largest_square.get(0).get(i).x;//+5;
+	              		leftBot.y = largest_square.get(0).get(i).y;//+5;
 	              	}
 	              	if(largest_square.get(0).get(i).x-largest_square.get(0).get(i).y >= maxDiff){
 	              		maxDiff = largest_square.get(0).get(i).x-largest_square.get(0).get(i).y;
-	              		rightTop.x = largest_square.get(0).get(i).x-5;
-	              		rightTop.y = largest_square.get(0).get(i).y-5;
+	              		rightTop.x = largest_square.get(0).get(i).x;//+5;
+	              		rightTop.y = largest_square.get(0).get(i).y;//+5;
 	              	}
 	        	}        	
 	        	/*
