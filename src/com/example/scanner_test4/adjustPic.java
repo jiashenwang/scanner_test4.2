@@ -41,6 +41,7 @@ import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -178,6 +179,39 @@ public class adjustPic extends Activity implements OnTouchListener{
 	    */
 	}
 
+	private void recycleMemory() {
+        if(resultBitmap != null){
+            resultBitmap.recycle();
+            resultBitmap = null;
+        }
+        if(processBitmap != null){
+        	processBitmap.recycle();
+        	processBitmap = null;
+        }	
+    	leftTop = null;
+    	leftBot = null;
+    	rightTop = null;
+    	rightBot = null;
+    	new_leftTop = null;
+    	new_leftBot = null;
+    	new_rightTop = null;
+    	new_rightBot = null;
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)  {
+	    if (keyCode == KeyEvent.KEYCODE_BACK ) {
+	        // do something on back.
+	    	recycleMemory();
+	    	Intent i = new Intent(adjustPic.this, MainActivity.class);
+	    	startActivity(i);
+	        return true;
+	    }
+
+	    return super.onKeyDown(keyCode, event);
+	}
+	
+	
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
@@ -257,7 +291,10 @@ public class adjustPic extends Activity implements OnTouchListener{
 	            fos = new FileOutputStream(mypath);
 	       // Use the compress method on the BitMap object to write image to the OutputStream
 	            resultBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+	            
 	            fos.close();
+	            //  recycle the memory
+	            recycleMemory();
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
@@ -267,9 +304,10 @@ public class adjustPic extends Activity implements OnTouchListener{
 	        
 	        Intent intent = new Intent(adjustPic.this, result.class);
 	        intent.putExtra("PATH", directory.getAbsolutePath());
-	        startActivity(intent);
+	        startActivity(intent); 
 
 		}
+
 		
 	}
 	private class RotateLeftListerner implements OnClickListener{

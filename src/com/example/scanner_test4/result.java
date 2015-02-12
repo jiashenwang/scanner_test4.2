@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.ImageView;
 
 public class result extends Activity {
@@ -37,5 +38,17 @@ public class result extends Activity {
 	    {
 	        e.printStackTrace();
 	    }
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)  {
+	    if (keyCode == KeyEvent.KEYCODE_BACK ) {
+	        // do something on back.
+	    	Intent i = new Intent(result.this, MainActivity.class);
+	    	startActivity(i);
+	        return true;
+	    }
+
+	    return super.onKeyDown(keyCode, event);
 	}
 }
