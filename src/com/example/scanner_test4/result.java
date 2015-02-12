@@ -38,9 +38,9 @@ public class result extends Activity {
 	    {
 	        e.printStackTrace();
 	    }
-	}
+	} 
 	
-	@Override
+	//@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)  {
 	    if (keyCode == KeyEvent.KEYCODE_BACK ) {
 	        // do something on back.

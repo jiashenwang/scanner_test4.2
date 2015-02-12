@@ -106,19 +106,14 @@ public class adjustPic extends Activity implements OnTouchListener{
 	    super.onCreate(savedInstanceState);
 	        
 	    setContentView(R.layout.adjust_pic);
-	    
+	     
 	    /*
-	    ActionBar actionBar = getActionBar();
-	    actionBar.setTitle("Crop card");
-	    actionBar.setDisplayHomeAsUpEnabled(true);
-	    actionBar.setDisplayShowHomeEnabled(true);
-	    */ 
 	    try{
 	    	//mCurrentCardID = getIntent().getExtras().getString(CURRENT_CARD_ID, null);
 	    	mRetakeImageFlag = getIntent().getExtras().getBoolean(RETAKE_IMAGE_FLAG, false);
 	    }catch(Exception e){
 	    	e.printStackTrace();
-	    }
+	    }*/
 	    
 	    display = getWindowManager().getDefaultDisplay();
 
@@ -197,6 +192,7 @@ public class adjustPic extends Activity implements OnTouchListener{
     	new_rightTop = null;
     	new_rightBot = null;
 	}
+	
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event)  {

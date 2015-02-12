@@ -21,18 +21,11 @@ public class MainActivity extends Activity {
 	private Uri imageUri;
 	private static int TAKE_PICTURE = 1;
 
-	/*
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-        @Override
-        public void onManagerConnected(int status) {
-            if (status == LoaderCallbackInterface.SUCCESS ) {
-            	Log.i("~~~~~~~", "Load successful!");
-            } else {
-                super.onManagerConnected(status);
-                Log.i("~~~~~~~", "Load failed!");
-            }
-        }
-    };*/
+	
+	@Override
+	public void onBackPressed() {
+		// banned back button
+	}
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +70,9 @@ public class MainActivity extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // call the parent
         super.onActivityResult(requestCode, resultCode, data);
-		Intent i = new Intent(MainActivity.this, adjustPic.class);
-	    startActivity(i); 
+        if(resultCode == -1){
+    		Intent i = new Intent(MainActivity.this, adjustPic.class);
+    	    startActivity(i); 	
+        }
     }
 }
